@@ -1,4 +1,4 @@
-package main.java.com.dms.backend.enums;
+package com.dms.backend.enums;
 
 public enum ManagerType {
     DIRECTOR,
