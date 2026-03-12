@@ -6,47 +6,53 @@ const { Option } = Select
 export const CompanyForm = () => {
   return (
     <Wrapper>
-      <SectionTitle>Rekvizitai</SectionTitle>
+      <SectionTitle>Company Details</SectionTitle>
 
       <TwoColumns>
-        <Form.Item label="Įmonės tipas" name="companyType">
+        <Form.Item label="Company Type" name="companyType">
           <Select>
-            <Option value="small">Mažoji bendrija</Option>
-            <Option value="uab">UAB</Option>
+            <Option value="UAB">UAB</Option>
+            <Option value="MB">Small Partnership (MB)</Option>
+            <Option value="II">Individual Enterprise (II)</Option>
+            <Option value="AB">Joint Stock Company (AB)</Option>
+            <Option value="OTHER">Other</Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label="Įmonės pavadinimas" name="companyName">
+        <Form.Item label="Company Name" name="companyName">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Įmonės kategorija" name="companyCategory">
+        <Form.Item label="Company Category" name="companyCategory">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Įmonės kodas" name="companyCode">
+        <Form.Item label="Company Code" name="companyCode">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Adresas" name="address">
+        <Form.Item label="Address" name="address">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Miestas" name="city">
+        <Form.Item label="City / District" name="city">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Vadovo tipas" name="managerType">
+        <Form.Item label="Manager Position" name="managerType">
           <Select>
-            <Option value="director">Vadovas</Option>
+            <Option value="DIRECTOR">Director</Option>
+            <Option value="CEO">CEO</Option>
+            <Option value="MANAGER">Manager</Option>
+            <Option value="OWNER">Owner</Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label="Vadovo vardas ir pavardė" name="managerName">
+        <Form.Item label="Manager Full Name" name="managerName">
           <Input />
         </Form.Item>
 
-        <Form.Item label="Data" name="date">
+        <Form.Item label="Document Date" name="date">
           <DatePicker style={{ width: "100%" }} />
         </Form.Item>
       </TwoColumns>
