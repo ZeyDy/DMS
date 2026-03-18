@@ -28,4 +28,7 @@ public class DocumentTemplate {
     private String filePath;
 
     private String description;
+
+    @Column(nullable = false)
+    private String subfolder;
 }

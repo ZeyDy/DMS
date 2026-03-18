@@ -27,6 +27,10 @@ public class GeneratedDocument {
     @JoinColumn(name = "template_id", nullable = false)
     private DocumentTemplate template;
 
+    @ManyToOne
+    @JoinColumn(name = "generation_record_id", nullable = false)
+    private GenerationRecord generationRecord;
+
     @Column(nullable = false)
     private String fileName;
 

@@ -30,11 +30,13 @@ public class TemplateService {
 
     public DocumentTemplate uploadTemplate(MultipartFile file, String name, String description, String subfolder) throws IOException {
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-        
-        // Ensure subfolder is valid (Sanitize to prevent path traversal)
-        String sanitizedSubfolder = subfolder.replaceAll("[^a-zA-Z0-9 ]", "_");
+
+        String sanitizedSubfolder = subfolder.replaceAll("[^a-zA-Z0-9/_ -]", "_").trim();
+        if (sanitizedSubfolder.isBlank()) {
+            throw new RuntimeException("Subfolder is required");
+        }
+
         Path targetDir = Paths.get(templatesBasePath, sanitizedSubfolder);
-        
         if (!Files.exists(targetDir)) {
             Files.createDirectories(targetDir);
         }
@@ -47,6 +49,7 @@ public class TemplateService {
                 .fileName(originalFilename)
                 .filePath(targetPath.toString())
                 .description(description)
+                .subfolder(sanitizedSubfolder)
                 .build();
 
         return templateRepository.save(template);
@@ -55,10 +58,10 @@ public class TemplateService {
     public void deleteTemplate(Long id) throws IOException {
         DocumentTemplate template = templateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Template not found"));
-        
+
         Path path = Paths.get(template.getFilePath());
         Files.deleteIfExists(path);
-        
+
         templateRepository.delete(template);
     }
 }
