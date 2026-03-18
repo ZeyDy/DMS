@@ -1,7 +1,7 @@
 package com.dms.backend.models;
 
-import main.java.com.dms.backend.enums.CompanyType;
-import main.java.com.dms.backend.enums.ManagerType;
+import com.dms.backend.enums.CompanyType;
+import com.dms.backend.enums.ManagerType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
