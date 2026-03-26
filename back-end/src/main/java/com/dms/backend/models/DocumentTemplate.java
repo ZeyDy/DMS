@@ -29,6 +29,14 @@ public class DocumentTemplate {
 
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isShared = false;
+
     @Column(nullable = false)
     private String subfolder;
 }
