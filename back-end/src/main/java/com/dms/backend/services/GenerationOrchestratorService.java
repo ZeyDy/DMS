@@ -32,7 +32,7 @@ public class GenerationOrchestratorService {
     private String templatesBasePath;
 
     @Transactional
-    public void generateFullPackage(Long companyId) throws IOException {
+    public Long generateFullPackage(Long companyId) throws IOException {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + companyId));
 
@@ -48,7 +48,7 @@ public class GenerationOrchestratorService {
 
         if (!Files.exists(templatesRootPath)) {
             Files.createDirectories(templatesRootPath);
-            return;
+            return generationRecord.getId();
         }
 
         try (Stream<Path> paths = Files.walk(templatesRootPath)) {
@@ -68,6 +68,8 @@ public class GenerationOrchestratorService {
                         }
                     });
         }
+
+        return generationRecord.getId();
     }
 
     @Transactional
@@ -155,8 +157,26 @@ public class GenerationOrchestratorService {
 
         documentGeneratorService.generateDocument(templatePath, outputPath, company);
 
+        String templateFilePath = templatePath.toString();
+        String fileName = templatePath.getFileName().toString();
+        String subfolder = relativePath.getParent() != null
+                ? relativePath.getParent().toString()
+                : "";
+        String templateName = fileName.replace(".docx", "");
+
+        DocumentTemplate template = templateRepository.findByFilePath(templateFilePath)
+                .orElseGet(() -> templateRepository.save(
+                        DocumentTemplate.builder()
+                                .name(templateName)
+                                .fileName(fileName)
+                                .filePath(templateFilePath)
+                                .subfolder(subfolder)
+                                .build()
+                ));
+
         GeneratedDocument generatedDocument = GeneratedDocument.builder()
                 .company(company)
+                .template(template)
                 .generationRecord(generationRecord)
                 .fileName(outputPath.getFileName().toString())
                 .filePath(outputPath.toString())

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -20,13 +21,14 @@ public class DocumentController {
     private final DocumentDownloadService documentDownloadService;
 
     @PostMapping("/generate-package/company/{id}")
-    public ResponseEntity<String> generatePackage(@PathVariable Long id) {
+    public ResponseEntity<?> generatePackage(@PathVariable Long id) {
         try {
-            generationOrchestratorService.generateFullPackage(id);
-            return ResponseEntity.ok("Document package generation started/completed successfully for company ID: " + id);
+            Long generationRecordId = generationOrchestratorService.generateFullPackage(id);
+            return ResponseEntity.ok(Map.of("generationRecordId", generationRecordId));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Error generating document package: " + e.getMessage());
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
