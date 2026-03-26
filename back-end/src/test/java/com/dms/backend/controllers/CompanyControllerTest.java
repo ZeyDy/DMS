@@ -51,7 +51,7 @@ class CompanyControllerTest {
                 .build();
 
         // Mock'uojamas serviso elgesys
-        when(companyService.registerCompany(any(Company.class))).thenReturn(savedCompany);
+        when(companyService.registerCompany(any(Company.class), any())).thenReturn(savedCompany);
 
         // Vykdomas testas
         mockMvc.perform(post("/api/companies")

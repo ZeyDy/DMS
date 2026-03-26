@@ -57,8 +57,6 @@ public class TemplateController {
         try {
             templateService.deleteTemplate(id, userId);
             return ResponseEntity.ok("Template deleted successfully");
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Failed to delete template: " + e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

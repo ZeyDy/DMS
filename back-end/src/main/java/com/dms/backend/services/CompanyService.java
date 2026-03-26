@@ -1,9 +1,11 @@
 package com.dms.backend.services;
 
+import com.dms.backend.enums.ActionLogType;
 import com.dms.backend.models.Company;
 import com.dms.backend.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -13,13 +15,18 @@ import java.util.List;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final ActionLogService actionLogService;
 
-    public Company registerCompany(Company company) {
+    @Transactional
+    public Company registerCompany(Company company, Long userId) {
         validateCompany(company);
-        return companyRepository.save(company);
+        Company saved = companyRepository.save(company);
+        actionLogService.logAction(userId, ActionLogType.COMPANY_CREATE, saved.getId(), "COMPANY", "Created company: " + saved.getName());
+        return saved;
     }
 
-    public Company updateCompany(Long id, Company updatedCompany) {
+    @Transactional
+    public Company updateCompany(Long id, Company updatedCompany, Long userId) {
         Company existingCompany = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
 
@@ -27,6 +34,7 @@ public class CompanyService {
 
         existingCompany.setType(updatedCompany.getType());
         existingCompany.setName(updatedCompany.getName());
+        // ... (remaining fields)
         existingCompany.setCode(updatedCompany.getCode());
         existingCompany.setCategory(updatedCompany.getCategory());
         existingCompany.setAddress(updatedCompany.getAddress());
@@ -35,14 +43,18 @@ public class CompanyService {
         existingCompany.setManagerFullName(updatedCompany.getManagerFullName());
         existingCompany.setDocumentDate(updatedCompany.getDocumentDate());
 
-        return companyRepository.save(existingCompany);
+        Company saved = companyRepository.save(existingCompany);
+        actionLogService.logAction(userId, ActionLogType.COMPANY_UPDATE, saved.getId(), "COMPANY", "Updated company: " + saved.getName());
+        return saved;
     }
 
-    public void deleteCompany(Long id) {
+    @Transactional
+    public void deleteCompany(Long id, Long userId) {
         Company existingCompany = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
 
         companyRepository.delete(existingCompany);
+        actionLogService.logAction(userId, ActionLogType.COMPANY_DELETE, id, "COMPANY", "Deleted company: " + existingCompany.getName());
     }
 
     public List<Company> getAllCompanies() {

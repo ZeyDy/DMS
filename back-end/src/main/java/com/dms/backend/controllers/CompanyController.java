@@ -17,9 +17,8 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<Company> registerCompany(@RequestBody Company company) {
-        Company savedCompany = companyService.registerCompany(company);
-        return ResponseEntity.ok(savedCompany);
+    public Company registerCompany(@RequestBody Company company, @RequestParam(required = false) Long userId) {
+        return companyService.registerCompany(company, userId);
     }
 
     @GetMapping
@@ -41,14 +40,12 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompany(@PathVariable Long id, @RequestBody Company company) {
-        Company updatedCompany = companyService.updateCompany(id, company);
-        return ResponseEntity.ok(updatedCompany);
+    public Company updateCompany(@PathVariable Long id, @RequestBody Company company, @RequestParam(required = false) Long userId) {
+        return companyService.updateCompany(id, company, userId);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCompany(@PathVariable Long id) {
-        companyService.deleteCompany(id);
-        return ResponseEntity.ok("Company deleted successfully");
+    public void deleteCompany(@PathVariable Long id, @RequestParam(required = false) Long userId) {
+        companyService.deleteCompany(id, userId);
     }
 }

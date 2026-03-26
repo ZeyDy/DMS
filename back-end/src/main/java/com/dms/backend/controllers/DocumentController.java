@@ -1,6 +1,7 @@
 package com.dms.backend.controllers;
 
 import com.dms.backend.dto.GenerateByAreasRequest;
+import com.dms.backend.dto.GenerateDocumentsResponse;
 import com.dms.backend.models.GeneratedDocument;
 import com.dms.backend.models.GenerationRecord;
 import com.dms.backend.repositories.GeneratedDocumentRepository;
@@ -28,10 +29,10 @@ public class DocumentController {
     private final GenerationRecordRepository generationRecordRepository;
     private final GeneratedDocumentRepository generatedDocumentRepository;
 
-    @PostMapping("/generate-package/company/{id}")
-    public ResponseEntity<?> generatePackage(@PathVariable Long id) {
+    @PostMapping("/generate-package/company/{companyId}")
+    public ResponseEntity<?> generateFullPackage(@PathVariable Long companyId, @RequestParam(required = false) Long userId) {
         try {
-            Long generationRecordId = generationOrchestratorService.generateFullPackage(id);
+            Long generationRecordId = generationOrchestratorService.generateFullPackage(companyId, userId);
             return ResponseEntity.ok(Map.of("generationRecordId", generationRecordId));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Error generating document package: " + e.getMessage());
@@ -42,9 +43,9 @@ public class DocumentController {
     }
 
     @PostMapping("/generate-by-areas")
-    public ResponseEntity<?> generateByAreas(@RequestBody GenerateByAreasRequest request) {
+    public ResponseEntity<?> generateByAreas(@RequestBody GenerateByAreasRequest request, @RequestParam(required = false) Long userId) {
         try {
-            var response = generationOrchestratorService.generateByAreas(request.getCompanyId(), request.getSelectedAreas());
+            GenerateDocumentsResponse response = generationOrchestratorService.generateByAreas(request.getCompanyId(), request.getSelectedAreas(), userId);
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Error generating selected documents: " + e.getMessage());
