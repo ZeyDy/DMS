@@ -28,6 +28,12 @@ public class CompanyController {
         return ResponseEntity.ok(companies);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Company>> searchCompanies(@RequestParam String name) {
+        List<Company> companies = companyService.searchCompaniesByName(name);
+        return ResponseEntity.ok(companies);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
         Company company = companyService.getCompanyById(id);

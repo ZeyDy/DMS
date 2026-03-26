@@ -1,4 +1,4 @@
-import { Button, Table, Space, Popconfirm } from "antd";
+import { Button, Table, Space, Popconfirm, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -20,7 +20,6 @@ export const CustomersPage = () => {
           managerType: c.managerType,
           managerName: c.managerFullName,
         }));
-
         setCompanies(formatted);
       });
   };
@@ -33,7 +32,7 @@ export const CustomersPage = () => {
     await fetch(`http://localhost:8080/api/companies/${id}`, {
       method: "DELETE",
     });
-
+    notification.success({ message: "Success", description: "Customer deleted" });
     loadCompanies();
   };
 
@@ -52,26 +51,22 @@ export const CustomersPage = () => {
     },
     {
       title: "Manager",
-      render: (record: any) =>
-        `${record.managerType} ${record.managerName}`,
+      render: (record: any) => `${record.managerType} ${record.managerName}`,
     },
-   {
+    {
       title: "Actions",
       render: (_: any, record: any) => (
         <Space>
-          <a onClick={() => navigate(`/customers/edit/${record.id}`)}>
-            Edit
-          </a>
-
+          <a onClick={() => navigate(`/customers/edit/${record.id}`)}>Edit</a>
           <Popconfirm
-            title="Delete customer?"
+            title="Delete this customer?"
             onConfirm={() => deleteCompany(record.id)}
           >
             <a style={{ color: "red" }}>Delete</a>
           </Popconfirm>
         </Space>
       ),
-    }
+    },
   ];
 
   return (

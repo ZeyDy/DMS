@@ -14,9 +14,10 @@ export const MainLayout = () => {
           mode="inline"
           onClick={({ key }) => navigate(key)}
           items={[
-            { key: "/", label: "Home" },
-            { key: "/customers", label: "Customers" },
-            ]}
+            { key: "/", label: "Home Page" },
+            { key: "/customers", label: "Clients" },
+            { key: "/documents", label: "Documents" },
+          ]}
         />
       </Sider>
 

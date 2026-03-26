@@ -54,6 +54,13 @@ public class CompanyService {
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
     }
 
+    public List<Company> searchCompaniesByName(String name) {
+        if (!StringUtils.hasText(name)) {
+            return List.of();
+        }
+        return companyRepository.findByNameContainingIgnoreCase(name);
+    }
+
     private void validateCompany(Company company) {
         if (company == null) {
             throw new IllegalArgumentException("Company cannot be null");
